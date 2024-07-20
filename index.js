@@ -6,7 +6,8 @@ const dotenv = require("dotenv");
 const authController = require("./controllers/authController");
 const userController = require("./controllers/userController");
 const pageRouteController = require("./controllers/pageRouteController");
-const { isAuthenticated } = require("./middleware/authMiddleware");
+const appointmentController = require("./controllers/appointmentController");
+const { isDriver, isAdmin } = require("./middleware/authMiddleware");
 
 dotenv.config();
 
@@ -28,8 +29,8 @@ app.use(
 
 // Page routes
 app.get("/", pageRouteController.dashboard);
-app.get("/g", isAuthenticated, pageRouteController.g);
-app.get("/g2", isAuthenticated, pageRouteController.g2);
+app.get("/g", isDriver, pageRouteController.g);
+app.get("/g2", isDriver, pageRouteController.g2);
 app.get("/login", authController.getLogin);
 app.get("/signup", authController.getSignup);
 app.get("/logout", authController.logoutUser);
@@ -46,6 +47,12 @@ app.post("/find-licence", userController.findUserByLicense);
 
 // Route to update car data
 app.post("/update-car-data", userController.updateCarData);
+
+app.get("/appointment", isAdmin, pageRouteController.appointment);
+
+app.post("/appointments", isAdmin, appointmentController.createAppointment);
+app.get("/appointments", appointmentController.getAppointmentsForDate);
+app.post("/book-appointment", isDriver, appointmentController.bookAppointment);
 
 // Creating connection with the database
 mongoose

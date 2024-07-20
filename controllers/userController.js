@@ -1,4 +1,5 @@
 const User = require("../models/Users");
+const Appointment = require("../models/Appointment");
 
 const updateUser = async (req, res) => {
   const validateUserInput = (input) => {
@@ -33,15 +34,17 @@ const updateUser = async (req, res) => {
       model,
       year,
       plateNumber,
+      appointmentId,
     } = req.body;
 
     // Validate input
     const errorMessages = validateUserInput(req.body);
     if (errorMessages.length > 0) {
+      const user = await User.findById(userId);
       return res.render("g2", {
         error: errorMessages.join(" "),
         success: null,
-        user: req.user,
+        user: user,
       });
     }
 
@@ -63,11 +66,26 @@ const updateUser = async (req, res) => {
       plateNumber,
     };
 
+    // Book appointment
+    if (appointmentId) {
+      const appointment = await Appointment.findById(appointmentId);
+      if (!appointment || !appointment.isTimeSlotAvailable) {
+        return res.render("g2", {
+          error: "Appointment slot not available",
+          success: null,
+          user: user,
+        });
+      }
+      appointment.isTimeSlotAvailable = false;
+      await appointment.save();
+      user.appointment = appointmentId;
+    }
+
     await user.save();
 
     res.render("g2", {
       user,
-      success: "User data updated successfully",
+      success: "User data updated and appointment booked successfully",
       error: null,
     });
   } catch (error) {

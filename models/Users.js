@@ -17,6 +17,11 @@ const UserSchema = new Schema({
     year: { type: Number, default: 0 },
     plateNumber: { type: String, default: "default" },
   },
+  appointment: {
+    type: Schema.Types.ObjectId,
+    ref: "Appointment",
+    default: null,
+  },
 });
 
 UserSchema.pre("save", async function (next) {
@@ -27,10 +32,10 @@ UserSchema.pre("save", async function (next) {
       user.password = await bcrypt.hash(user.password, 10);
     }
 
-    if (user.licenseNumber && user.licenseNumber !== "default") {
-      const hashedLicenseNumber = await bcrypt.hash(user.licenseNumber, 10);
-      user.licenseNumber = hashedLicenseNumber;
-    }
+    // if (user.licenseNumber && user.licenseNumber !== "default") {
+    //   const hashedLicenseNumber = await bcrypt.hash(user.licenseNumber, 10);
+    //   user.licenseNumber = hashedLicenseNumber;
+    // }
 
     next();
   } catch (error) {

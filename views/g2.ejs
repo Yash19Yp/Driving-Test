@@ -40,7 +40,7 @@
                                         <% } %>
 
                                             <div class="my-5">
-                                                <form method="POST" action="/update-user">
+                                                <form id="appointmentBookingForm" method="POST" action="/update-user">
                                                     <!-- Personal Information -->
                                                     <p>Fill Personal Information</p>
                                                     <div class="mb-3">
@@ -99,11 +99,24 @@
                                                             required>
                                                     </div>
 
+                                                    <!-- Appointment Booking -->
+                                                    <div class="mb-3">
+                                                        <label for="date" class="form-label">Select Date:</label>
+                                                        <input type="date" class="form-control" id="date" name="date">
+                                                    </div>
+                                                    <div id="timeSlotsContainer" class="mb-3">
+                                                        <label>Select Time Slot:</label>
+                                                        <div id="timeSlots" class="d-flex flex-wrap">
+                                                        </div>
+                                                    </div>
+
                                                     <!-- Hidden Fields -->
                                                     <input type="hidden" name="userId" value="<%= user._id %>" />
+                                                    <input type="hidden" id="appointmentId" name="appointmentId"
+                                                        value="" />
 
                                                     <button class="btn btn-primary text-uppercase" id="submitButton"
-                                                        type="submit">Submit</button>
+                                                        type="submit">Book Appointment</button>
                                                 </form>
                                             </div>
                         </div>
@@ -116,6 +129,33 @@
 
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
+                    <script>
+                        document.getElementById('date').addEventListener('change', async (e) => {
+                            const date = e.target.value;
+                            const response = await fetch(`/appointments?date=${date}`);
+                            const result = await response.json();
+
+                            if (result.success) {
+                                const timeSlotsContainer = document.getElementById('timeSlots');
+                                timeSlotsContainer.innerHTML = '';
+                                result.appointments.forEach(appointment => {
+                                    if (appointment.isTimeSlotAvailable) {
+                                        const button = document.createElement('button');
+                                        button.type = 'button';
+                                        button.classList.add('btn', 'btn-outline-primary', 'time-slot');
+                                        button.textContent = appointment.time;
+                                        button.dataset.id = appointment._id;
+                                        button.addEventListener('click', () => {
+                                            document.querySelectorAll('.time-slot').forEach(btn => btn.classList.remove('selected'));
+                                            button.classList.add('selected');
+                                            document.getElementById('appointmentId').value = button.dataset.id;
+                                        });
+                                        timeSlotsContainer.appendChild(button);
+                                    }
+                                });
+                            }
+                        });
+                    </script>
     </body>
 
 </html>

@@ -7,6 +7,12 @@ const dashboard = async (req, res) => {
   res.render("index", { user });
 };
 
+const appointment = async (req, res) => {
+  const user = (await User.findById(req.session.userId)) ?? null;
+
+  res.render("appointment", { user: req.session.user });
+};
+
 // G page Route
 const g = async (req, res) => {
   try {
@@ -45,4 +51,4 @@ const g2 = async (req, res) => {
   }
 };
 
-module.exports = { dashboard, g, g2 };
+module.exports = { dashboard, g, g2, appointment };

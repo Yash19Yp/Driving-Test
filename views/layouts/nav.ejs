@@ -19,16 +19,21 @@
                         <li class="nav-item">
                             <a class="nav-link px-lg-3 py-3 py-lg-4" href="/g">G_TEST</a>
                         </li>
-                        <% } %>
+                        <% } else if (user?.userType==='Admin' ) { %>
                             <li class="nav-item">
-                                <a class="nav-link px-lg-3 py-3 py-lg-4" href="/logout">Logout</a>
+                                <a class="nav-link px-lg-3 py-3 py-lg-4" href="/appointment">Appointment</a>
                             </li>
+                            <% } %>
 
-                            <% } else { %>
                                 <li class="nav-item">
-                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="/login">LOGIN</a>
+                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="/logout">Logout</a>
                                 </li>
-                                <% } %>
+
+                                <% } else { %>
+                                    <li class="nav-item">
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/login">LOGIN</a>
+                                    </li>
+                                    <% } %>
             </ul>
         </div>
     </div>
