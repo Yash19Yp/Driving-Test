@@ -1,6 +1,26 @@
 const User = require("../models/Users");
 
 const updateUser = async (req, res) => {
+  const validateUserInput = (input) => {
+    let errorMessages = [];
+    if (
+      !input.firstName ||
+      !input.lastName ||
+      !input.age ||
+      !input.licenseNumber ||
+      !input.make ||
+      !input.model ||
+      !input.year ||
+      !input.plateNumber
+    ) {
+      errorMessages.push("All fields are required.");
+    }
+    if (input.licenseNumber.length !== 8) {
+      errorMessages.push("License number must be exactly 8 characters.");
+    }
+    return errorMessages;
+  };
+
   try {
     const userId = req.session.userId;
 
@@ -15,28 +35,8 @@ const updateUser = async (req, res) => {
       plateNumber,
     } = req.body;
 
-    // Check if user already exists by userId
-    let user = await User.findById(userId);
-
-    let errorMessages = [];
-
-    // Validation for input fields
-    if (
-      !firstName ||
-      !lastName ||
-      !age ||
-      !licenseNumber ||
-      !make ||
-      !model ||
-      !year ||
-      !plateNumber
-    ) {
-      errorMessages.push("All fields are required.");
-    }
-    if (licenseNumber.length !== 8) {
-      errorMessages.push("License number must be exactly 8 characters.");
-    }
-
+    // Validate input
+    const errorMessages = validateUserInput(req.body);
     if (errorMessages.length > 0) {
       return res.render("g2", {
         error: errorMessages.join(" "),
@@ -45,7 +45,8 @@ const updateUser = async (req, res) => {
       });
     }
 
-    // user not found error
+    // Check if user already exists by userId
+    let user = await User.findById(userId);
     if (!user) {
       return res.render("login", { user: null, error: "User not found" });
     }

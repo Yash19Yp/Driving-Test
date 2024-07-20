@@ -23,8 +23,9 @@ UserSchema.pre("save", async function (next) {
   const user = this;
   // Encrypt Password and licenseNumber before saving to the database
   try {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    user.password = hashedPassword;
+    if (user.isModified("password")) {
+      user.password = await bcrypt.hash(user.password, 10);
+    }
 
     if (user.licenseNumber && user.licenseNumber !== "default") {
       const hashedLicenseNumber = await bcrypt.hash(user.licenseNumber, 10);
