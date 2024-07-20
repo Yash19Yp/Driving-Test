@@ -80,6 +80,13 @@ const findUserByLicense = async (req, res) => {
   try {
     const { licenseNumber } = req.body;
 
+    if (!licenseNumber || licenseNumber.length !== 8) {
+      return res.render("g", {
+        user: null,
+        error: "Invalid license number",
+      });
+    }
+
     // to find the data by the licence number
     const user = await User.findOne({ licenseNumber });
 
@@ -100,6 +107,21 @@ const findUserByLicense = async (req, res) => {
 const updateCarData = async (req, res) => {
   try {
     const { licenseNumber, make, model, year, plateNumber } = req.body;
+
+    if (
+      !licenseNumber ||
+      !make ||
+      !model ||
+      !year ||
+      !plateNumber ||
+      licenseNumber.length !== 8
+    ) {
+      return res.render("g", {
+        user: null,
+        error:
+          "All fields are required and license number must be 8 characters",
+      });
+    }
 
     // To get the data from user collection
     const user = await User.findOne({ licenseNumber });

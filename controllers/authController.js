@@ -17,10 +17,18 @@ const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ username });
-    // Compare Passwords
-    const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch || !user) {
+    if (!user) {
+      return res.render("login", {
+        user: null,
+        error: "Invalid username or password",
+      });
+    }
+
+    // Compare Passwords
+    const isMatch = bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.render("login", {
         user: null,
         error: "Invalid username or password",
@@ -50,6 +58,14 @@ const signupUser = async (req, res) => {
   }
 
   try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.render("signup", {
+        user: null,
+        error: "Username already exists",
+      });
+    }
+
     const newUser = new User({
       username,
       password,
@@ -70,6 +86,7 @@ const logoutUser = (req, res) => {
       console.error("Error destroying session:", err);
       return res.redirect("/");
     }
+    res.clearCookie("connect.sid");
     res.redirect("/login");
   });
 };

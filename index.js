@@ -6,8 +6,10 @@ const dotenv = require("dotenv");
 const authController = require("./controllers/authController");
 const userController = require("./controllers/userController");
 const pageRouteController = require("./controllers/pageRouteController");
+const { isAuthenticated } = require("./middleware/authMiddleware");
 
 dotenv.config();
+
 // Used Ejs template and public folder
 const app = new express();
 app.use(express.static("public"));
@@ -23,14 +25,6 @@ app.use(
     saveUninitialized: false,
   })
 );
-
-// Middleware to protect G and G2 routes
-const isAuthenticated = (req, res, next) => {
-  if (req.session.userId && req.session.userType === "Driver") {
-    return next();
-  }
-  res.redirect("/login");
-};
 
 // Page routes
 app.get("/", pageRouteController.dashboard);
