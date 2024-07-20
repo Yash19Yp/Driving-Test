@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Common Header -->
+<%- include('layouts/header'); -%>
+    <!-- Login header -->
+    <%- include('layouts/login_header'); -%>
+
+
+        <body>
+            <!-- Navigation-->
+            <%- include('layouts/nav'); -%>
+
+                <!-- Page Header-->
+                <header class="masthead">
+                    <div class="container position-relative px-4 px-lg-5">
+                        <div class="row gx-4 gx-lg-5 justify-content-center">
+                            <div class="col-md-10 col-lg-8 col-xl-7">
+                                <div class="site-heading">
+                                    <h1>Sign Up</h1>
+                                    <span class="subheading">Please fill the form below to create a new account.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="bg-light py-3 py-md-5">
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <div class="col-12 col-md-11 col-lg-8 col-xl-7 col-xxl-6">
+                                <div class="bg-white p-4 p-md-5 rounded shadow-sm">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="mb-5">
+                                                <h3>Sign Up</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form action="/signup" method="post">
+                                        <div class="row gy-3 gy-md-4 overflow-hidden">
+                                            <div class="col-12">
+                                                <label for="username" class="form-label">Username <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" name="username" id="username"
+                                                    placeholder="Enter the username" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="password" class="form-label">Password <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="password" class="form-control" name="password"
+                                                    placeholder="*********" id="password" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="repeatedPassword" class="form-label">Confirm Password <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="password" class="form-control" name="repeatedPassword"
+                                                    placeholder="*********" id="repeatedPassword" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="userType" class="form-label">User Type <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-select" name="userType" id="userType" required>
+                                                    <option value="Driver">Driver</option>
+                                                    <option value="Examiner">Examiner</option>
+                                                    <option value="Admin">Admin</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button class="btn btn-lg btn-primary" type="submit">Sign
+                                                        Up</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <hr class="mt-5 mb-4 border-secondary-subtle">
+                                            <div
+                                                class="d-flex gap-2 gap-md-4 flex-column flex-md-row justify-content-md-end">
+                                                <a href="/login" class="link-secondary text-decoration-none">Already
+                                                    have an account? Log in</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer-->
+                <%- include('layouts/footer'); -%>
+
+                    <!-- Scripts -->
+                    <%- include('layouts/scripts'); -%>
+        </body>
+
+</html>

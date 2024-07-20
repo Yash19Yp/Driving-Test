@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Header -->
+<%- include('layouts/header'); -%>
+
+    <body>
+        <!-- Navigation-->
+        <%- include('layouts/nav'); -%>
+
+            <!-- Page Header-->
+            <header class="masthead">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="page-heading">
+                                <h1>G2 Test Booking</h1>
+                                <span class="subheading">Fill below data to book G2 Driving Test.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content-->
+            <main class="mb-4">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <!-- Display Success or Error Messages -->
+                            <% if (success) { %>
+                                <div class="alert alert-success" role="alert">
+                                    <%= success %>
+                                </div>
+                                <% } %>
+                                    <% if (error) { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            <%= error %>
+                                        </div>
+                                        <% } %>
+
+                                            <div class="my-5">
+                                                <form method="POST" action="/update-user">
+                                                    <!-- Personal Information -->
+                                                    <p>Fill Personal Information</p>
+                                                    <div class="mb-3">
+                                                        <label for="firstName" class="form-label">First Name</label>
+                                                        <input type="text" class="form-control" id="firstName"
+                                                            name="firstName"
+                                                            value="<%= user.firstName !== 'default' ? user.firstName : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="lastName" class="form-label">Last Name</label>
+                                                        <input type="text" class="form-control" id="lastName"
+                                                            name="lastName"
+                                                            value="<%= user.lastName !== 'default' ? user.lastName : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="age" class="form-label">Age</label>
+                                                        <input type="number" class="form-control" id="age" name="age"
+                                                            value="<%= user.age !== 0 ? user.age : '' %>" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="licenseNumber" class="form-label">License
+                                                            Number</label>
+                                                        <input type="text" class="form-control" id="licenseNumber"
+                                                            name="licenseNumber"
+                                                            value="<%= user.licenseNumber !== 'default' ? user.licenseNumber : '' %>"
+                                                            maxlength="8" pattern="[A-Za-z0-9]{8}" required>
+                                                    </div>
+
+                                                    <!-- Car Information -->
+                                                    <p>Car Information</p>
+                                                    <div class="mb-3">
+                                                        <label for="make" class="form-label">Make</label>
+                                                        <input type="text" class="form-control" id="make" name="make"
+                                                            value="<%= user.car_details.make !== 'default' ? user.car_details.make : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="model" class="form-label">Model</label>
+                                                        <input type="text" class="form-control" id="model" name="model"
+                                                            value="<%= user.car_details.model !== 'default' ? user.car_details.model : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="year" class="form-label">Year</label>
+                                                        <input type="number" class="form-control" id="year" name="year"
+                                                            value="<%= user.car_details.year !== 0 ? user.car_details.year : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="plateNumber" class="form-label">Plate Number</label>
+                                                        <input type="text" class="form-control" id="plateNumber"
+                                                            name="plateNumber"
+                                                            value="<%= user.car_details.plateNumber !== 'default' ? user.car_details.plateNumber : '' %>"
+                                                            required>
+                                                    </div>
+
+                                                    <!-- Hidden Fields -->
+                                                    <input type="hidden" name="userId" value="<%= user._id %>" />
+
+                                                    <button class="btn btn-primary text-uppercase" id="submitButton"
+                                                        type="submit">Submit</button>
+                                                </form>
+                                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer-->
+            <%- include('layouts/footer'); -%>
+
+                <!-- Script -->
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>
