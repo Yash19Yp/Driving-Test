@@ -18,6 +18,7 @@
                 </div>
             </header>
             <div class="container">
+                <div id="msg"></div>
                 <h1>Appointment Management</h1>
                 <form id="appointmentForm">
                     <div class="form-group">
@@ -42,68 +43,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary">Add Appointments</button>
                 </form>
-                <div id="message"></div>
             </div>
             <%- include('layouts/footer') %>
                 <%- include('layouts/scripts') %>
-                    <script>
-                        document.getElementById('date').addEventListener('change', async (e) => {
-                            const date = e.target.value;
-                            const response = await fetch(`/appointments?date=${date}`);
-                            const result = await response.json();
-
-                            if (result.success) {
-                                const timeSlotsContainer = document.getElementById('timeSlotsContainer');
-                                const timeSlotButtons = timeSlotsContainer.querySelectorAll('.time-slot');
-                                timeSlotButtons.forEach(button => {
-                                    button.classList.remove('selected');
-                                    button.classList.remove('btn-secondary');
-                                    button.classList.add('btn-outline-primary');
-                                    button.disabled = false;
-                                });
-
-                                result.appointments.forEach(appointment => {
-                                    const button = Array.from(timeSlotButtons).find(btn => btn.textContent === appointment.time);
-                                    if (button) {
-                                        button.classList.remove('btn-outline-primary');
-                                        button.classList.add('btn-secondary');
-                                        button.disabled = true;
-                                    }
-                                });
-                            }
-                        });
-
-                        document.querySelectorAll('.time-slot').forEach(button => {
-                            button.addEventListener('click', () => {
-                                button.classList.toggle('selected');
-                            });
-                        });
-
-                        document.getElementById('appointmentForm').addEventListener('submit', async (e) => {
-                            e.preventDefault();
-                            const date = document.getElementById('date').value;
-                            const selectedSlots = Array.from(document.querySelectorAll('.time-slot.selected')).map(button =>
-                                button.textContent);
-
-                            const response = await fetch('/appointments', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ date, slots: selectedSlots })
-                            });
-
-                            const result = await response.json();
-                            document.getElementById('message').textContent = result.message;
-
-                            if (result.success) {
-                                document.querySelectorAll('.time-slot.selected').forEach(button => {
-                                    button.classList.remove('selected');
-                                    button.classList.remove('btn-outline-primary');
-                                    button.classList.add('btn-secondary');
-                                    button.disabled = true;
-                                });
-                            }
-                        });
-                    </script>
+                    <script src="js/appointment.js"></script>
     </body>
 
 </html>

@@ -10,7 +10,7 @@ const dashboard = async (req, res) => {
 const appointment = async (req, res) => {
   const user = (await User.findById(req.session.userId)) ?? null;
 
-  res.render("appointment", { user: req.session.user });
+  res.render("appointment", { user });
 };
 
 // G page Route

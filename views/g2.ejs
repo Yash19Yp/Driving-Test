@@ -107,6 +107,8 @@
                                                     <div id="timeSlotsContainer" class="mb-3">
                                                         <label>Select Time Slot:</label>
                                                         <div id="timeSlots" class="d-flex flex-wrap">
+                                                            <p>Please select a date above to see the available time
+                                                                slots.</p>
                                                         </div>
                                                     </div>
 
@@ -116,7 +118,8 @@
                                                         value="" />
 
                                                     <button class="btn btn-primary text-uppercase" id="submitButton"
-                                                        type="submit">Book Appointment</button>
+                                                        type="submit">Book
+                                                        Appointment</button>
                                                 </form>
                                             </div>
                         </div>
@@ -129,33 +132,7 @@
 
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
-                    <script>
-                        document.getElementById('date').addEventListener('change', async (e) => {
-                            const date = e.target.value;
-                            const response = await fetch(`/appointments?date=${date}`);
-                            const result = await response.json();
-
-                            if (result.success) {
-                                const timeSlotsContainer = document.getElementById('timeSlots');
-                                timeSlotsContainer.innerHTML = '';
-                                result.appointments.forEach(appointment => {
-                                    if (appointment.isTimeSlotAvailable) {
-                                        const button = document.createElement('button');
-                                        button.type = 'button';
-                                        button.classList.add('btn', 'btn-outline-primary', 'time-slot');
-                                        button.textContent = appointment.time;
-                                        button.dataset.id = appointment._id;
-                                        button.addEventListener('click', () => {
-                                            document.querySelectorAll('.time-slot').forEach(btn => btn.classList.remove('selected'));
-                                            button.classList.add('selected');
-                                            document.getElementById('appointmentId').value = button.dataset.id;
-                                        });
-                                        timeSlotsContainer.appendChild(button);
-                                    }
-                                });
-                            }
-                        });
-                    </script>
+                    <%- include('layouts/g2.js'); -%>
     </body>
 
 </html>
