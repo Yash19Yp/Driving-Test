@@ -13,16 +13,22 @@ project-Sturcture/
 ├── views/                      # EJS templates
 │   ├── layouts/                # Layout templates
 │   ├── index.ejs               # Home page
+│   ├── appointment.ejs         # Appointment page
 │   ├── login.ejs               # Login page
 │   ├── signup.ejs              # Signup page
 │   ├── g2.ejs                  # G2 test booking page
 │   └── g.ejs                   # G test page
 │
 ├── models/                     # Mongoose models
+│   ├── Appointment.ejs         # Appointment Modal
 │   └── Users.js                # Users model
 │
+├── middleware/                 # Middleware
+│   └── authMiddleware.js       # Auth middleware
+|
 ├── Controllers/                # Mongoose Controllers
 │   ├── authController.js       # Authentication Controllers
+│   ├── appointmentController.js# Appointment Controllers
 │   ├── pageRouteController.js  # Routes for the pages
 │   └── userController.js       # User Controllers Functions
 │
