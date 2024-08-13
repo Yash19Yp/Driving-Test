@@ -228,6 +228,7 @@ const updateCarData = async (req, res) => {
   }
 };
 
+// Not in Use
 const findUserByLicense = async (req, res) => {
   try {
     const { licenseNumber } = req.body;

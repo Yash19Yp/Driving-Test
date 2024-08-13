@@ -83,7 +83,6 @@ const updateTestResult = async (req, res) => {
 
     await user.save();
 
-    // Render the examiner page with a success message
     const testUsers = await User.find({}).populate("appointment").exec();
     res.render("examiner", {
       user: await User.findById(req.session.userId),
