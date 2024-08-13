@@ -62,12 +62,12 @@
                                                             <strong>Appointment Date:</strong>
                                                             <%= candidate.appointment?.date %><br>
                                                                 <strong>Appointment Time:</strong>
-                                                                <%= candidate.appointment.time %><br>
+                                                                <%= candidate.appointment?.time %><br>
                                                                     <strong>Test Result:</strong> <b>
-                                                                        <%= test.testResult ? "Pass" : "Fail" %>
+                                                                        <%= test?.testResult ? "Pass" : "Fail" %>
                                                                     </b><br>
                                                                     <strong>Test Comments:</strong>
-                                                                    <%= test.comment || "No comments provided" %>
+                                                                    <%= test?.comment || "No comments provided" %>
                                         </li>
                                         <% }); %>
                                             <% }); %>
