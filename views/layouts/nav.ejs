@@ -23,15 +23,22 @@
                             <li class="nav-item">
                                 <a class="nav-link px-lg-3 py-3 py-lg-4" href="/appointment">Appointment</a>
                             </li>
-                            <% } %>
+                            <li class="nav-item">
+                                <a class="nav-link px-lg-3 py-3 py-lg-4" href="/drivers">Drivers</a>
+                            </li>
+                            <% } else if (user?.userType==='Examiner' ) { %>
                                 <li class="nav-item">
-                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="/logout">Logout</a>
+                                    <a class="nav-link px-lg-3 py-3 py-lg-4" href="/examiner">Examiner</a>
                                 </li>
-                                <% } else { %>
+                                <% } %>
                                     <li class="nav-item">
-                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/login">LOGIN</a>
+                                        <a class="nav-link px-lg-3 py-3 py-lg-4" href="/logout">Logout</a>
                                     </li>
-                                    <% } %>
+                                    <% } else { %>
+                                        <li class="nav-item">
+                                            <a class="nav-link px-lg-3 py-3 py-lg-4" href="/login">LOGIN</a>
+                                        </li>
+                                        <% } %>
             </ul>
         </div>
     </div>

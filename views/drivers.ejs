@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Header -->
+<%- include('layouts/header'); -%>
+
+    <body>
+        <!-- Navigation-->
+        <%- include('layouts/nav'); -%>
+            <!-- Page Header-->
+            <header class="masthead">
+                <div class="container position-relative px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <div class="site-heading">
+                                <h1>Admin</h1>
+                                <span class="subheading">Admin Interface</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="mb-4">
+                <div class="container px-4 px-lg-5">
+                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                        <div class="col-md-10 col-lg-8 col-xl-7">
+                            <h2>Candidates</h2>
+
+                            <!-- Filter -->
+                            <form method="GET" action="/admin">
+                                <div class="mb-3">
+                                    <label for="passFailStatus" class="form-label">Filter by Pass/Fail Status:</label>
+                                    <select class="form-select" id="passFailStatus" name="passFail"
+                                        onchange="this.form.submit()">
+                                        <option value="all" <%=passFailStatus==="all" ? "selected" : "" %>>All</option>
+                                        <option value="true" <%=passFailStatus==="true" ? "selected" : "" %>>Pass
+                                        </option>
+                                        <option value="false" <%=passFailStatus==="false" ? "selected" : "" %>>Fail
+                                        </option>
+                                    </select>
+                                </div>
+                            </form>
+
+                            <!-- Candidate List -->
+                            <% if (candidates.length> 0) { %>
+                                <ul class="list-group">
+                                    <% candidates.forEach(candidate=> { %>
+
+                                        <li class="list-group-item">
+                                            <strong>Name:</strong>
+                                            <%= candidate.firstName %>
+                                                <%= candidate.lastName %><br>
+                                                    <strong>License Number:</strong>
+                                                    <%= candidate.licenseNumber %><br>
+                                                        <strong>Test Type:</strong>
+                                                        <%= candidate.testType %><br>
+                                                            <strong>Appointment Date:</strong>
+                                                            <%= candidate.appointment.date %><br>
+                                                                <strong>Appointment Time:</strong>
+                                                                <%= candidate.appointment.time %><br>
+                                                                    <strong>Test Result:</strong>
+                                                                    <b>
+                                                                        <%= candidate.passFail===true ? "Pass" : "Fail"
+                                                                            %>
+                                                                    </b><br>
+                                                                    <strong>Test Comments:</strong>
+                                                                    <%= candidate.comment %>
+                                        </li>
+                                        <% }); %>
+                                </ul>
+                                <% } else { %>
+                                    <p>No candidates found.</p>
+                                    <% } %>
+
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Footer-->
+            <%- include('layouts/footer'); -%>
+                <!-- Script -->
+                <%- include('layouts/scripts'); -%>
+    </body>
+
+</html>

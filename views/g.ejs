@@ -28,65 +28,90 @@
                     <div class="row gx-4 gx-lg-5 justify-content-center">
                         <div class="col-md-10 col-lg-8 col-xl-7">
                             <!-- To show the error message -->
-                            <% if (error) { %>
-                                <div class="alert alert-danger" role="alert">
-                                    <%= error %>
+                            <% if (success) { %>
+                                <div class="alert alert-success" role="alert">
+                                    <%= success %>
                                 </div>
-                                <a href="/g2" class="btn btn-primary">Go to G2 Page</a>
-                                <!-- To show the user details if user exist -->
-                                <% } else if (user) { %>
-                                    <div class="container my-5">
-                                        <h2 class="mb-4">User Information</h2>
-                                        <form method="POST" action="/update-car-data">
-                                            <div class="mb-3">
-                                                <label for="firstName" class="form-label">First Name</label>
-                                                <input type="text" class="form-control" id="firstName" name="firstName"
-                                                    value="<%= user.firstName !== 'default' ? user.firstName : '' %>"
-                                                    disabled>
+                                <% } %>
+                                    <% if (error) { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            <%= error %>
+                                        </div>
+                                        <a href="/g2" class="btn btn-primary">Go to G2 Page</a>
+                                        <!-- To show the user details if user exist -->
+                                        <% } else if (user) { %>
+                                            <div class="container my-5">
+                                                <h2 class="mb-4">User Information</h2>
+                                                <form method="POST" action="/update-car-data">
+                                                    <div class="mb-3">
+                                                        <label for="firstName" class="form-label">First Name</label>
+                                                        <input type="text" class="form-control" id="firstName"
+                                                            name="firstName"
+                                                            value="<%= user.firstName !== 'default' ? user.firstName : '' %>"
+                                                            disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="lastName" class="form-label">Last Name</label>
+                                                        <input type="text" class="form-control" id="lastName"
+                                                            name="lastName"
+                                                            value="<%= user.lastName !== 'default' ? user.lastName : '' %>"
+                                                            disabled>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="age" class="form-label">Age</label>
+                                                        <input type="number" class="form-control" id="age" name="age"
+                                                            value="<%= user.age !== 0 ? user.age : '' %>" disabled>
+                                                    </div>
+                                                    <h3 class="mb-4">Car Information</h3>
+                                                    <div class="mb-3">
+                                                        <label for="make" class="form-label">Make</label>
+                                                        <input type="text" class="form-control" id="make" name="make"
+                                                            value="<%= user.car_details.make !== 'default' ? user.car_details.make : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="model" class="form-label">Model</label>
+                                                        <input type="text" class="form-control" id="model" name="model"
+                                                            value="<%= user.car_details.model !== 'default' ? user.car_details.model : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="year" class="form-label">Year</label>
+                                                        <input type="number" class="form-control" id="year" name="year"
+                                                            value="<%= user.car_details.year !== 0 ? user.car_details.year : '' %>"
+                                                            required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="plateNumber" class="form-label">Plate Number</label>
+                                                        <input type="text" class="form-control" id="plateNumber"
+                                                            name="plateNumber"
+                                                            value="<%= user.car_details.plateNumber !== 'default' ? user.car_details.plateNumber : '' %>"
+                                                            required>
+                                                    </div>
+
+                                                    <!-- Appointment Booking -->
+                                                    <div class="mb-3">
+                                                        <label for="date" class="form-label">Select Date:</label>
+                                                        <input type="date" class="form-control" id="date" name="date">
+                                                    </div>
+                                                    <div id="timeSlotsContainer" class="mb-3">
+                                                        <label>Select Time Slot:</label>
+                                                        <div id="timeSlots" class="d-flex flex-wrap">
+                                                            <p>Please select a date above to see the available time
+                                                                slots.</p>
+                                                        </div>
+                                                    </div>
+
+                                                    <input type="hidden" name="licenseNumber"
+                                                        value="<%= user.licenseNumber %>" />
+                                                    <input type="hidden" id="appointmentId" name="appointmentId"
+                                                        value="" />
+                                                    <input type="hidden" id="testType" name="testType" value="G">
+                                                    <button type="submit" class="btn btn-primary">Update Car
+                                                        data</button>
+                                                </form>
                                             </div>
-                                            <div class="mb-3">
-                                                <label for="lastName" class="form-label">Last Name</label>
-                                                <input type="text" class="form-control" id="lastName" name="lastName"
-                                                    value="<%= user.lastName !== 'default' ? user.lastName : '' %>"
-                                                    disabled>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="age" class="form-label">Age</label>
-                                                <input type="number" class="form-control" id="age" name="age"
-                                                    value="<%= user.age !== 0 ? user.age : '' %>" disabled>
-                                            </div>
-                                            <h3 class="mb-4">Car Information</h3>
-                                            <div class="mb-3">
-                                                <label for="make" class="form-label">Make</label>
-                                                <input type="text" class="form-control" id="make" name="make"
-                                                    value="<%= user.car_details.make !== 'default' ? user.car_details.make : '' %>"
-                                                    required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="model" class="form-label">Model</label>
-                                                <input type="text" class="form-control" id="model" name="model"
-                                                    value="<%= user.car_details.model !== 'default' ? user.car_details.model : '' %>"
-                                                    required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="year" class="form-label">Year</label>
-                                                <input type="number" class="form-control" id="year" name="year"
-                                                    value="<%= user.car_details.year !== 0 ? user.car_details.year : '' %>"
-                                                    required>
-                                            </div>
-                                            <div class="mb-3">
-                                                <label for="plateNumber" class="form-label">Plate Number</label>
-                                                <input type="text" class="form-control" id="plateNumber"
-                                                    name="plateNumber"
-                                                    value="<%= user.car_details.plateNumber !== 'default' ? user.car_details.plateNumber : '' %>"
-                                                    required>
-                                            </div>
-                                            <input type="hidden" name="licenseNumber"
-                                                value="<%= user.licenseNumber %>" />
-                                            <button type="submit" class="btn btn-primary">Update Car data</button>
-                                        </form>
-                                    </div>
-                                    <% } %>
+                                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -96,6 +121,8 @@
             <%- include('layouts/footer'); -%>
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
+                    <script src="js/timeslot.js"></script>
+
     </body>
 
 </html>

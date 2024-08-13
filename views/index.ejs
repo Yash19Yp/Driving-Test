@@ -14,57 +14,91 @@
                         <div class="col-md-10 col-lg-8 col-xl-7">
                             <div class="site-heading">
                                 <h1>Dashboard</h1>
-                                <span class="subheading">DriveTest Booking Kiosk</span>
+                                <% if (typeof user !=='undefined' && user) { %>
+                                    <span class="subheading">Welcome, <%= user.firstName %></span>
+                                    <% } else { %>
+                                        <span class="subheading">Your Gateway to Secure Your DriveTest
+                                            Appointment</span>
+                                        <% } %>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
-            <!-- Main Content-->
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="#">
-                                <h2 class="post-title">You can book G2/G drive test from this kiosk</h2>
-                                <h3 class="post-subtitle">You can book G2/G drive test from this kiosk</h3>
-                            </a>
-                            <p class="post-meta">
-                                Posted by
-                                <a href="#!">DriveTest Center</a>
-                            </p>
+
+            <!-- Main Content -->
+            <% if (typeof user !=='undefined' && user) { %>
+                <% if (user.userType==="Driver" ) { %>
+                    <main class="mb-4">
+                        <div class="container px-4 px-lg-5">
+                            <div class="row gx-4 gx-lg-5 justify-content-center">
+                                <div class="col-md-10 col-lg-8 col-xl-7">
+                                    <h2>Exam Results</h2>
+
+                                    <!-- Display Exam Results -->
+                                    <% if (user.testType && user.comment !='' && user.passFail !=null) { %>
+                                        <div class="card mb-4">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Test Type: <%= user.testType %>
+                                                </h5>
+                                                <p class="card-text">Comment: <%= user.comment %>
+                                                </p>
+                                                <p class="card-text">
+                                                    Status: <%= user.passFail ? "Pass" : "Fail" %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <% } else { %>
+                                            <p>No exam results available.</p>
+                                            <% } %>
+                                </div>
+                            </div>
                         </div>
-                        <!-- Divider-->
-                        <hr class="my-4" />
+                    </main>
+                    <% } else if (user.userType==="Examiner" ) { %>
+                        <!-- Examiner -->
+                        <% } else if (user.userType==="Admin" ) { %>
+                            <!-- Admin -->
+                            <% } %>
+                                <% } else { %>
+                                    <div class="container px-4 px-lg-5">
+                                        <div class="row gx-4 gx-lg-5 justify-content-center">
+                                            <div class="col-md-10 col-lg-8 col-xl-7">
+                                                <div class="post-preview">
+                                                    <h2 class="post-title">Welcome to the DriveTest Booking Kiosk</h2>
+                                                    <h3 class="post-subtitle">Plan and book your G2 and G driving tests
+                                                        with ease and convenience.</h3>
+                                                    <p class="post-meta">
+                                                        Posted by
+                                                        <a href="#!">DriveTest Center</a>
+                                                    </p>
+                                                </div>
+                                                <hr class="my-4" />
 
-                        <!-- Post preview-->
-                        <div class="post-preview">
-                            <a href="#">
-                                <h2 class="post-title">You can book G2/G drive test from this kiosk</h2>
-                                <h3 class="post-subtitle">You can book G2/G drive test from this kiosk</h3>
-                            </a>
-                            <p class="post-meta">
-                                Posted by
-                                <a href="#!">DriveTest Center</a>
-                            </p>
-                        </div>
-                        <!-- Divider-->
-                        <hr class="my-4" />
+                                                <div class="post-preview">
+                                                    <h2 class="post-title">How It Works</h2>
+                                                    <h3 class="post-subtitle">Log in to book your driving test, review
+                                                        your appointment details, and check your test results.</h3>
+                                                    <p class="post-meta">
+                                                        Posted by
+                                                        <a href="#!">DriveTest Center</a>
+                                                    </p>
+                                                </div>
+                                                <hr class="my-4" />
 
-                        <!-- Pager-->
-                        <div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase"
-                                href="#!">Continue Booking →</a></div>
-                    </div>
-                </div>
-            </div>
+                                                <div class="d-flex justify-content-end mb-4"><a
+                                                        class="btn btn-primary text-uppercase" href="/login">Log In to
+                                                        Continue →</a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
 
-            <!-- Footer-->
-            <%- include('layouts/footer'); -%>
+                                        <!-- Footer-->
+                                        <%- include('layouts/footer'); -%>
 
-                <!-- Scripts -->
-                <%- include('layouts/scripts'); -%>
-
+                                            <!-- Scripts -->
+                                            <%- include('layouts/scripts'); -%>
     </body>
 
 </html>

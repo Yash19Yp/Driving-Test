@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateInput = document.getElementById("date");
   const timeSlotsContainer = document.getElementById("timeSlots");
   const appointmentIdInput = document.getElementById("appointmentId");
+  const testTypeInput = document.getElementById("testType");
 
-  //
   const timeSlotButtons = (appointment) => {
     const button = document.createElement("button");
 
@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Fetch the available appointments
   dateInput.addEventListener("change", async (e) => {
     const date = e.target.value;
     timeSlotsContainer.innerHTML = "";

@@ -22,6 +22,9 @@ const UserSchema = new Schema({
     ref: "Appointment",
     default: null,
   },
+  testType: { type: String, default: "" },
+  comment: { type: String, default: "" },
+  passFail: { type: Boolean, default: null },
 });
 
 UserSchema.pre("save", async function (next) {

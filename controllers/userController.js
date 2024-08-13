@@ -35,6 +35,7 @@ const updateUser = async (req, res) => {
       year,
       plateNumber,
       appointmentId,
+      testType,
     } = req.body;
 
     // Validate input
@@ -65,6 +66,7 @@ const updateUser = async (req, res) => {
       year,
       plateNumber,
     };
+    user.testType = testType;
 
     // Book appointment
     if (appointmentId) {
@@ -94,6 +96,71 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateCarData = async (req, res) => {
+  try {
+    const {
+      licenseNumber,
+      make,
+      model,
+      year,
+      plateNumber,
+      appointmentId,
+      testType,
+    } = req.body;
+
+    if (
+      !licenseNumber ||
+      !make ||
+      !model ||
+      !year ||
+      !plateNumber ||
+      licenseNumber.length !== 8
+    ) {
+      return res.render("g", {
+        user: null,
+        error:
+          "All fields are required and license number must be 8 characters",
+      });
+    }
+
+    // To get the data from user collection
+    const user = await User.findOne({ licenseNumber });
+
+    if (user) {
+      // updating the car date into user collection
+      user.car_details = { make, model, year, plateNumber };
+      user.testType = testType;
+
+      // Book appointment
+      if (appointmentId) {
+        const appointment = await Appointment.findById(appointmentId);
+        if (!appointment || !appointment.isTimeSlotAvailable) {
+          return res.render("g2", {
+            error: "Appointment slot not available",
+            success: null,
+            user: user,
+          });
+        }
+        appointment.isTimeSlotAvailable = false;
+        await appointment.save();
+        user.appointment = appointmentId;
+      }
+
+      await user.save();
+
+      res.render("g", {
+        user: user,
+        success: "User data updated and appointment booked successfully",
+        error: null,
+      });
+    } else {
+      res.render("g", { user: null, error: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).send("Error updating car information: " + error.message);
+  }
+};
+
 const findUserByLicense = async (req, res) => {
   try {
     const { licenseNumber } = req.body;
@@ -119,42 +186,6 @@ const findUserByLicense = async (req, res) => {
     // error log to get the error
     console.error("Error finding user:", error.message);
     res.status(500).send("Error finding user: " + error.message);
-  }
-};
-
-const updateCarData = async (req, res) => {
-  try {
-    const { licenseNumber, make, model, year, plateNumber } = req.body;
-
-    if (
-      !licenseNumber ||
-      !make ||
-      !model ||
-      !year ||
-      !plateNumber ||
-      licenseNumber.length !== 8
-    ) {
-      return res.render("g", {
-        user: null,
-        error:
-          "All fields are required and license number must be 8 characters",
-      });
-    }
-
-    // To get the data from user collection
-    const user = await User.findOne({ licenseNumber });
-
-    if (user) {
-      // updating the car date into user collection
-      user.car_details = { make, model, year, plateNumber };
-      await user.save();
-
-      res.render("g", { user: user, error: null });
-    } else {
-      res.render("g", { user: null, error: "User not found" });
-    }
-  } catch (error) {
-    res.status(500).send("Error updating car information: " + error.message);
   }
 };
 

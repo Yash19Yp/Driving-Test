@@ -12,4 +12,11 @@ const isAdmin = (req, res, next) => {
   res.redirect("/login");
 };
 
-module.exports = { isDriver, isAdmin };
+const isExaminer = (req, res, next) => {
+  if (req.session.userId && req.session.userType === "Examiner") {
+    return next();
+  }
+  res.redirect("/login");
+};
+
+module.exports = { isDriver, isAdmin, isExaminer };

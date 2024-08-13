@@ -116,6 +116,7 @@
                                                     <input type="hidden" name="userId" value="<%= user._id %>" />
                                                     <input type="hidden" id="appointmentId" name="appointmentId"
                                                         value="" />
+                                                    <input type="hidden" id="testType" name="testType" value="G2">
 
                                                     <button class="btn btn-primary text-uppercase" id="submitButton"
                                                         type="submit">Book
@@ -132,7 +133,7 @@
 
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
-                    <script src="js/g2.js"></script>
+                    <script src="js/timeslot.js"></script>
     </body>
 
 </html>
