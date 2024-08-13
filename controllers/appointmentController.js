@@ -47,10 +47,18 @@ const getAppointmentsForDate = async (req, res) => {
 };
 
 const bookAppointment = async (req, res) => {
-  const { appointmentId } = req.body;
+  const { appointmentId, testType } = req.body;
   const userId = req.session.userId;
 
   try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.json({ success: false, message: "User not found" });
+    }
+
+    user.tests = user.tests.filter((test) => test.testType !== testType);
+
     const appointment = await Appointment.findById(appointmentId);
 
     if (!appointment || !appointment.isTimeSlotAvailable) {
@@ -63,7 +71,13 @@ const bookAppointment = async (req, res) => {
     appointment.isTimeSlotAvailable = false;
     await appointment.save();
 
-    await User.findByIdAndUpdate(userId, { appointment: appointment._id });
+    user.appointment = appointment._id;
+    user.tests.push({
+      testType: testType,
+      testResult: null, // This will be updated by the examiner
+      comment: "", // This will be updated by the examiner
+    });
+    await user.save();
 
     res.json({ success: true, message: "Appointment booked successfully" });
   } catch (error) {

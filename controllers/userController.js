@@ -42,7 +42,7 @@ const updateUser = async (req, res) => {
     const errorMessages = validateUserInput(req.body);
     if (errorMessages.length > 0) {
       const user = await User.findById(userId);
-      return res.render("g2", {
+      return res.render(testType === "G2" ? "g2" : "g", {
         error: errorMessages.join(" "),
         success: null,
         user: user,
@@ -55,7 +55,22 @@ const updateUser = async (req, res) => {
       return res.render("login", { user: null, error: "User not found" });
     }
 
-    // Update user data with new G2 information
+    if (testType === "G2") {
+      const g2Test = user.tests.find((test) => test.testType === "G2");
+
+      if (
+        g2Test &&
+        (g2Test.testResult === null || g2Test.testResult === true)
+      ) {
+        return res.render("g2", {
+          user,
+          error:
+            "You cannot book a new G2 appointment as you have already booked appointment.",
+          success: null,
+        });
+      }
+    }
+
     user.firstName = firstName;
     user.lastName = lastName;
     user.age = age;
@@ -66,13 +81,11 @@ const updateUser = async (req, res) => {
       year,
       plateNumber,
     };
-    user.testType = testType;
 
-    // Book appointment
     if (appointmentId) {
       const appointment = await Appointment.findById(appointmentId);
       if (!appointment || !appointment.isTimeSlotAvailable) {
-        return res.render("g2", {
+        return res.render(testType === "G2" ? "g2" : "g", {
           error: "Appointment slot not available",
           success: null,
           user: user,
@@ -81,18 +94,35 @@ const updateUser = async (req, res) => {
       appointment.isTimeSlotAvailable = false;
       await appointment.save();
       user.appointment = appointmentId;
+
+      const existingTestIndex = user.tests.findIndex(
+        (test) => test.testType === testType
+      );
+      if (existingTestIndex !== -1) {
+        user.tests[existingTestIndex].testResult = null;
+        user.tests[existingTestIndex].comment = "";
+      } else {
+        user.tests.push({
+          testType: testType,
+          testResult: null,
+          comment: "",
+        });
+      }
     }
 
     await user.save();
 
-    res.render("g2", {
+    res.render(testType === "G2" ? "g2" : "g", {
       user,
       success: "User data updated and appointment booked successfully",
       error: null,
     });
   } catch (error) {
     console.error(error);
-    res.render("g2", { success: null, error: "Error updating user data" });
+    res.render(testType === "G2" ? "g2" : "g", {
+      success: null,
+      error: "Error updating user data",
+    });
   }
 };
 
@@ -123,19 +153,42 @@ const updateCarData = async (req, res) => {
       });
     }
 
-    // To get the data from user collection
     const user = await User.findOne({ licenseNumber });
 
     if (user) {
-      // updating the car date into user collection
-      user.car_details = { make, model, year, plateNumber };
-      user.testType = testType;
+      if (testType === "G") {
+        const g2Test = user.tests.find(
+          (test) => test.testType === "G2" && test.testResult === true
+        );
+        if (!g2Test) {
+          return res.render("g", {
+            user: user,
+            error: "You need to pass the G2 test before booking a G test",
+            success: null,
+          });
+        }
 
-      // Book appointment
+        const gTest = user.tests.find(
+          (test) =>
+            test.testType === "G" &&
+            (test.testResult === null || test.testResult === true)
+        );
+        if (gTest) {
+          return res.render("g", {
+            user: user,
+            error:
+              "You already have booked appointment. You cannot book another.",
+            success: null,
+          });
+        }
+      }
+
+      user.car_details = { make, model, year, plateNumber };
+
       if (appointmentId) {
         const appointment = await Appointment.findById(appointmentId);
         if (!appointment || !appointment.isTimeSlotAvailable) {
-          return res.render("g2", {
+          return res.render("g", {
             error: "Appointment slot not available",
             success: null,
             user: user,
@@ -144,6 +197,20 @@ const updateCarData = async (req, res) => {
         appointment.isTimeSlotAvailable = false;
         await appointment.save();
         user.appointment = appointmentId;
+
+        const existingTestIndex = user.tests.findIndex(
+          (test) => test.testType === testType
+        );
+        if (existingTestIndex !== -1) {
+          user.tests[existingTestIndex].testResult = null;
+          user.tests[existingTestIndex].comment = "";
+        } else {
+          user.tests.push({
+            testType: testType,
+            testResult: null,
+            comment: "",
+          });
+        }
       }
 
       await user.save();

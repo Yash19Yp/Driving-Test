@@ -13,7 +13,6 @@ const {
   isExaminer,
 } = require("./middleware/authMiddleware");
 const examinerController = require("./controllers/examinerController");
-const adminController = require("./controllers/adminController");
 dotenv.config();
 
 // Used Ejs template and public folder
@@ -40,7 +39,6 @@ app.get("/g2", isDriver, pageRouteController.g2);
 
 app.get("/examiner", isExaminer, examinerController.getUsersForExaminer);
 app.post("/updateTestResult", isExaminer, examinerController.updateTestResult);
-app.get("/admin", isAdmin, adminController.listCandidates);
 app.get("/drivers", isAdmin, pageRouteController.drivers);
 
 app.get("/login", authController.getLogin);

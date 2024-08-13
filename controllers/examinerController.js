@@ -6,17 +6,32 @@ const getUsersForExaminer = async (req, res) => {
     const userId = req.session.userId;
     const user = await User.findById(userId);
 
-    const filter = req.query.testType ? { testType: req.query.testType } : {};
+    let filter = {};
+    if (req.query.testType && req.query.testType !== "all") {
+      filter = {
+        tests: {
+          $elemMatch: {
+            testType: req.query.testType,
+          },
+        },
+      };
+    } else {
+      filter = {
+        tests: { $exists: true, $not: { $size: 0 } },
+      };
+    }
 
     const testUsers = await User.find(filter).populate("appointment").exec();
+
     res.render("examiner", {
       user,
       users: testUsers,
-      filter: req.query.testType || "",
+      filter: req.query.testType || "all",
     });
   } catch (error) {
     console.error(error);
     res.render("examiner", {
+      user,
       users: [],
       filter: "",
       error: "Error fetching data",
@@ -26,30 +41,65 @@ const getUsersForExaminer = async (req, res) => {
 
 const updateTestResult = async (req, res) => {
   try {
-    const { userId, comment, passFail } = req.body;
+    const { userId, comment, testResult, testType } = req.body;
+
+    if (!userId || !testType) {
+      const user = await User.findById(req.session.userId);
+      const testUsers = await User.find({}).populate("appointment").exec();
+      return res.render("examiner", {
+        user,
+        users: testUsers,
+        filter: req.query.testType || "all",
+        error: "Invalid data submitted.",
+      });
+    }
+
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.json({ success: false, error: "User not found" });
+      const testUsers = await User.find({}).populate("appointment").exec();
+      return res.render("examiner", {
+        user,
+        users: testUsers,
+        filter: req.query.testType || "all",
+        error: "User not found.",
+      });
     }
 
-    user.comment = comment;
-    user.passFail = passFail;
+    const test = user.tests.find((test) => test.testType === testType);
+
+    if (test) {
+      test.comment = comment;
+      test.testResult = testResult === "true";
+    } else {
+      const testUsers = await User.find({}).populate("appointment").exec();
+      return res.render("examiner", {
+        user,
+        users: testUsers,
+        filter: req.query.testType || "all",
+        error: "Test record not found.",
+      });
+    }
 
     await user.save();
 
+    // Render the examiner page with a success message
     const testUsers = await User.find({}).populate("appointment").exec();
-
     res.render("examiner", {
-      user,
+      user: await User.findById(req.session.userId),
       users: testUsers,
-      message: "Test result updated successfully",
+      filter: req.query.testType || "all",
+      success: "Test result updated successfully.",
     });
-
-    // res.json({ success: true, message: "Test result updated successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, error: "Error updating test result" });
+    const testUsers = await User.find({}).populate("appointment").exec();
+    res.render("examiner", {
+      user: await User.findById(req.session.userId),
+      users: testUsers,
+      filter: req.query.testType || "all",
+      error: "Error updating test result.",
+    });
   }
 };
 

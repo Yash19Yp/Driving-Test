@@ -8,9 +8,35 @@ const dashboard = async (req, res) => {
 };
 
 const drivers = async (req, res) => {
-  const user = (await User.findById(req.session.userId)) ?? null;
+  try {
+    const user = (await User.findById(req.session.userId)) ?? null;
 
-  res.render("drivers", { user, candidates: [], passFailStatus: "all" });
+    const resultStatus = req.query.testResult || "all";
+    console.log("resultStatus", req.query);
+    let filter = {};
+
+    if (resultStatus !== "all") {
+      filter = {
+        tests: {
+          $elemMatch: {
+            testResult: resultStatus === "true",
+          },
+        },
+      };
+    }
+
+    const candidates = await User.find(filter).populate("appointment").exec();
+
+    res.render("drivers", { user, candidates, resultStatus });
+  } catch (error) {
+    console.error(error);
+    res.render("drivers", {
+      user: null,
+      candidates: [],
+      resultStatus: "all",
+      error: "Error fetching candidates.",
+    });
+  }
 };
 
 const appointment = async (req, res) => {

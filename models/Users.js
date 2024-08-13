@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcrypt");
 
+const TestRecordSchema = new Schema({
+  testType: { type: String, required: true },
+  testResult: { type: Boolean, default: null },
+  comment: { type: String, default: "" },
+});
+
 // User Collection Schema
 const UserSchema = new Schema({
   firstName: { type: String, default: "default" },
@@ -22,24 +28,16 @@ const UserSchema = new Schema({
     ref: "Appointment",
     default: null,
   },
-  testType: { type: String, default: "" },
-  comment: { type: String, default: "" },
-  passFail: { type: Boolean, default: null },
+  tests: [TestRecordSchema], // Array to store test records
 });
 
 UserSchema.pre("save", async function (next) {
   const user = this;
-  // Encrypt Password and licenseNumber before saving to the database
+  // Encrypt Password before saving to the database
   try {
     if (user.isModified("password")) {
       user.password = await bcrypt.hash(user.password, 10);
     }
-
-    // if (user.licenseNumber && user.licenseNumber !== "default") {
-    //   const hashedLicenseNumber = await bcrypt.hash(user.licenseNumber, 10);
-    //   user.licenseNumber = hashedLicenseNumber;
-    // }
-
     next();
   } catch (error) {
     console.error(error);

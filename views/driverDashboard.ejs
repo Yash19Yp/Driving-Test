@@ -29,7 +29,7 @@
                             <h2>Exam Results</h2>
 
                             <!-- Display Exam Results -->
-                            <% if (user.testType && user.comment !='' && user.passFail !=null) { %>
+                            <% if (user.testType && user.comment !='' && user.testResult !=null) { %>
                                 <div class="card mb-4">
                                     <div class="card-body">
                                         <h5 class="card-title">Test Type: <%= user.testType %>
@@ -37,7 +37,7 @@
                                         <p class="card-text">Comment: <%= user.comment %>
                                         </p>
                                         <p class="card-text">
-                                            Status: <%= user.passFail ? "Pass" : "Fail" %>
+                                            Status: <%= user.testResult ? "Pass" : "Fail" %>
                                         </p>
                                     </div>
                                 </div>

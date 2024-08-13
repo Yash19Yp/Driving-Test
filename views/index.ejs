@@ -33,32 +33,91 @@
                         <div class="container px-4 px-lg-5">
                             <div class="row gx-4 gx-lg-5 justify-content-center">
                                 <div class="col-md-10 col-lg-8 col-xl-7">
-                                    <h2>Exam Results</h2>
+                                    <h2 class="text-center mb-4">Exam Results</h2>
 
                                     <!-- Display Exam Results -->
-                                    <% if (user.testType && user.comment !='' && user.passFail !=null) { %>
-                                        <div class="card mb-4">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Test Type: <%= user.testType %>
-                                                </h5>
-                                                <p class="card-text">Comment: <%= user.comment %>
-                                                </p>
-                                                <p class="card-text">
-                                                    Status: <%= user.passFail ? "Pass" : "Fail" %>
-                                                </p>
+                                    <% if (user.tests && user.tests.length> 0) { %>
+                                        <% user.tests.forEach(function(test) { %>
+                                            <div class="card mb-4 shadow-sm">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Test Type: <%= test.testType %>
+                                                    </h5>
+                                                    <% if (test.testResult===null) { %>
+                                                        <p class="card-text">
+                                                            Status: <span
+                                                                class="badge bg-warning text-dark">Pending</span>
+                                                        </p>
+                                                        <% } else { %>
+                                                            <p class="card-text">Comment: <%= test.comment %>
+                                                            </p>
+                                                            <p class="card-text">
+                                                                Status:
+                                                                <% if (test.testResult===true) { %>
+                                                                    <span class="badge bg-success">Pass</span>
+                                                                    <% } else { %>
+                                                                        <span class="badge bg-danger">Fail</span>
+                                                                        <% } %>
+                                                            </p>
+                                                            <% } %>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <% } else { %>
-                                            <p>No exam results available.</p>
-                                            <% } %>
+                                            <% }) %>
+                                                <% } else { %>
+                                                    <p class="text-center text-muted">No exam results available.</p>
+                                                    <% } %>
                                 </div>
                             </div>
                         </div>
                     </main>
                     <% } else if (user.userType==="Examiner" ) { %>
-                        <!-- Examiner -->
+                        <main class="mb-4">
+                            <div class="container px-4 px-lg-5">
+                                <div class="row gx-4 gx-lg-5 justify-content-center">
+                                    <div class="col-md-10 col-lg-8 col-xl-7">
+                                        <h2 class="text-center mb-4">Examiner Dashboard</h2>
+                                        <p class="text-center">Here you can review upcoming appointments, update test
+                                            results, and provide comments for each driver's exam.</p>
+                                        <p class="text-center">Use the navigation menu to filter appointments by test
+                                            type (G2 or G) and mark them as Pass or Fail after the test.</p>
+                                        <div class="card mb-4 shadow-sm">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Your Responsibilities:</h5>
+                                                <ul class="list-unstyled">
+                                                    <li>✔️ Review upcoming test appointments.</li>
+                                                    <li>✔️ Conduct driving tests and assess driver performance.</li>
+                                                    <li>✔️ Update the system with test results and comments.</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
                         <% } else if (user.userType==="Admin" ) { %>
-                            <!-- Admin -->
+                            <main class="mb-4">
+                                <div class="container px-4 px-lg-5">
+                                    <div class="row gx-4 gx-lg-5 justify-content-center">
+                                        <div class="col-md-10 col-lg-8 col-xl-7">
+                                            <h2 class="text-center mb-4">Admin Dashboard</h2>
+                                            <p class="text-center">As an admin, you manage the overall DriveTest system,
+                                                including viewing and managing driver test results, scheduling
+                                                appointments, and ensuring the system runs smoothly.</p>
+                                            <div class="card mb-4 shadow-sm">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Admin Functions:</h5>
+                                                    <ul class="list-unstyled">
+                                                        <li>✔️ View all test results and manage candidate records.</li>
+                                                        <li>✔️ Schedule and modify test appointments for drivers.</li>
+                                                        <li>✔️ Filter candidates by pass/fail status to assist in
+                                                            generating reports.</li>
+                                                        <li>✔️ Ensure the system's data integrity and security.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
                             <% } %>
                                 <% } else { %>
                                     <div class="container px-4 px-lg-5">

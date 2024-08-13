@@ -7,6 +7,7 @@
     <body>
         <!-- Navigation-->
         <%- include('layouts/nav'); -%>
+
             <!-- Page Header-->
             <header class="masthead">
                 <div class="container position-relative px-4 px-lg-5">
@@ -26,77 +27,131 @@
                 <div class="container px-4 px-lg-5">
                     <div class="row gx-4 gx-lg-5 justify-content-center">
                         <div class="col-md-10 col-lg-8 col-xl-7">
-                            <h2>Appointments</h2>
 
-                            <!-- Filter -->
-                            <form method="GET" action="/examiner">
-                                <div class="mb-3">
-                                    <label for="testType" class="form-label">Filter by Test Type:</label>
-                                    <select class="form-select" id="testType" name="testType"
-                                        onchange="this.form.submit()">
-                                        <option value="all">All</option>
-                                        <option value="G">G</option>
-                                        <option value="G2">G2</option>
-                                    </select>
+                            <% if (typeof success !=='undefined' && success) { %>
+                                <div class="alert alert-success" role="alert">
+                                    <%= success %>
                                 </div>
-                            </form>
-
-                            <!-- Appointments List -->
-                            <div class="mt-4">
-                                <% if (users.length> 0) { %>
-                                    <ul class="list-group">
-                                        <% users.forEach(user=> { %>
-                                            <% if (user.appointment) { %>
-                                                <li class="list-group-item">
-                                                    <strong>Name:</strong>
-                                                    <%= user.firstName %>
-                                                        <%= user.lastName %><br>
-                                                            <strong>License Number:</strong>
-                                                            <%= user.licenseNumber %><br>
-                                                                <strong>Test Type:</strong>
-                                                                <%= user.testType %><br>
-                                                                    <strong>Appointment Date:</strong>
-                                                                    <%= user.appointment.date %><br>
-                                                                        <strong>Appointment Time:</strong>
-                                                                        <%= user.appointment.time %>
-                                                                            <form method="POST"
-                                                                                action="/updateTestResult" class="mt-3">
-                                                                                <input type="hidden" name="userId"
-                                                                                    value="<%= user._id %>">
-                                                                                <div class="mb-3">
-                                                                                    <label for="comment-<%= user._id %>"
-                                                                                        class="form-label">Comment</label>
-                                                                                    <textarea class="form-control"
-                                                                                        id="comment-<%= user._id %>"
-                                                                                        name="comment"
-                                                                                        rows="2"><%= user.comment %></textarea>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label class="form-check-label"
-                                                                                        for="passFail-<%= user._id %>">Pass</label>
-                                                                                    <input class="form-check-input"
-                                                                                        type="radio" name="passFail"
-                                                                                        id="passFail-<%= user._id %>"
-                                                                                        value="true">
-                                                                                    <label class="form-check-label"
-                                                                                        for="passFail-<%= user._id %>">Fail</label>
-                                                                                    <input class="form-check-input"
-                                                                                        type="radio" name="passFail"
-                                                                                        id="passFail-<%= user._id %>"
-                                                                                        value="false">
-                                                                                </div>
-                                                                                <button type="submit"
-                                                                                    class="btn btn-primary">Submit</button>
-                                                                            </form>
-                                                </li>
-                                                <% } %>
-                                                    <% }) %>
-                                    </ul>
-                                    <% } else { %>
-                                        <p>No appointments found.</p>
+                                <% } %>
+                                    <% if (typeof error !=='undefined' && error) { %>
+                                        <div class="alert alert-danger" role="alert">
+                                            <%= error %>
+                                        </div>
                                         <% } %>
-                            </div>
 
+                                            <h2>Appointments</h2>
+
+                                            <!-- Filter -->
+                                            <form method="GET" action="/examiner">
+                                                <div class="mb-3">
+                                                    <label for="testType" class="form-label">Filter by Test
+                                                        Type:</label>
+                                                    <select class="form-select" id="testType" name="testType"
+                                                        onchange="this.form.submit()">
+                                                        <option value="all" <%=filter==="all" ? "selected" : "" %>>All
+                                                        </option>
+                                                        <option value="G" <%=filter==="G" ? "selected" : "" %>>G
+                                                        </option>
+                                                        <option value="G2" <%=filter==="G2" ? "selected" : "" %>>G2
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </form>
+
+                                            <!-- Appointments List -->
+                                            <div class="mt-4">
+                                                <% if (users.length> 0) { %>
+                                                    <ul class="list-group">
+                                                        <% users.forEach(user=> { %>
+                                                            <% if (user.appointment) { %>
+                                                                <% const filteredTests=filter==="all" ? user.tests :
+                                                                    user.tests.filter(test=> test.testType === filter);
+                                                                    %>
+
+                                                                    <% filteredTests.forEach(test=> { %>
+                                                                        <li class="list-group-item">
+                                                                            <strong>Name:</strong>
+                                                                            <%= user.firstName %>
+                                                                                <%= user.lastName %><br>
+                                                                                    <strong>License Number:</strong>
+                                                                                    <%= user.licenseNumber %><br>
+                                                                                        <strong>Test Type:</strong>
+                                                                                        <%= test.testType || "Unknown"
+                                                                                            %><br>
+                                                                                            <strong>Appointment
+                                                                                                Date:</strong>
+                                                                                            <%= user.appointment.date %>
+                                                                                                <br>
+                                                                                                <strong>Appointment
+                                                                                                    Time:</strong>
+                                                                                                <%= user.appointment.time
+                                                                                                    %>
+
+                                                                                                    <form method="POST"
+                                                                                                        action="/updateTestResult"
+                                                                                                        class="mt-3">
+                                                                                                        <input
+                                                                                                            type="hidden"
+                                                                                                            name="userId"
+                                                                                                            value="<%= user._id %>">
+                                                                                                        <input
+                                                                                                            type="hidden"
+                                                                                                            name="testType"
+                                                                                                            value="<%= test.testType %>">
+                                                                                                        <div
+                                                                                                            class="mb-3">
+                                                                                                            <label
+                                                                                                                for="comment-<%= user._id %>"
+                                                                                                                class="form-label">Comment</label>
+                                                                                                            <textarea
+                                                                                                                class="form-control"
+                                                                                                                id="comment-<%= user._id %>"
+                                                                                                                name="comment"
+                                                                                                                rows="2"><%= test.comment || '' %></textarea>
+                                                                                                        </div>
+                                                                                                        <div
+                                                                                                            class="mb-3">
+                                                                                                            <label
+                                                                                                                class="form-check-label"
+                                                                                                                for="testResult-pass-<%= user._id %>">Pass</label>
+                                                                                                            <input
+                                                                                                                class="form-check-input ml-1"
+                                                                                                                type="radio"
+                                                                                                                name="testResult"
+                                                                                                                id="testResult-pass-<%= user._id %>"
+                                                                                                                value="true"
+                                                                                                                <%=test.testResult===true
+                                                                                                                ? "checked"
+                                                                                                                : "" %>>
+
+                                                                                                            <label
+                                                                                                                class="form-check-label ml-4"
+                                                                                                                for="testResult-fail-<%= user._id %>">Fail</label>
+                                                                                                            <input
+                                                                                                                class="form-check-input ml-1"
+                                                                                                                type="radio"
+                                                                                                                name="testResult"
+                                                                                                                id="testResult-fail-<%= user._id %>"
+                                                                                                                value="false"
+                                                                                                                <%=test.testResult===false
+                                                                                                                ? "checked"
+                                                                                                                : "" %>>
+                                                                                                        </div>
+
+
+                                                                                                        <button
+                                                                                                            type="submit"
+                                                                                                            class="btn btn-primary">Submit</button>
+                                                                                                    </form>
+                                                                        </li>
+                                                                        <% }) %>
+                                                                            <% } %>
+                                                                                <% }) %>
+                                                    </ul>
+                                                    <% } else { %>
+                                                        <p>No appointments found.</p>
+                                                        <% } %>
+                                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,6 +159,7 @@
 
             <!-- Footer-->
             <%- include('layouts/footer'); -%>
+
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
     </body>

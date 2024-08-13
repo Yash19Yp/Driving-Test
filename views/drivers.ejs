@@ -7,6 +7,7 @@
     <body>
         <!-- Navigation-->
         <%- include('layouts/nav'); -%>
+
             <!-- Page Header-->
             <header class="masthead">
                 <div class="container position-relative px-4 px-lg-5">
@@ -29,15 +30,14 @@
                             <h2>Candidates</h2>
 
                             <!-- Filter -->
-                            <form method="GET" action="/admin">
+                            <form method="GET" action="/drivers">
                                 <div class="mb-3">
-                                    <label for="passFailStatus" class="form-label">Filter by Pass/Fail Status:</label>
-                                    <select class="form-select" id="passFailStatus" name="passFail"
+                                    <label for="resultStatus" class="form-label">Filter by Pass/Fail Status:</label>
+                                    <select class="form-select" id="resultStatus" name="testResult"
                                         onchange="this.form.submit()">
-                                        <option value="all" <%=passFailStatus==="all" ? "selected" : "" %>>All</option>
-                                        <option value="true" <%=passFailStatus==="true" ? "selected" : "" %>>Pass
-                                        </option>
-                                        <option value="false" <%=passFailStatus==="false" ? "selected" : "" %>>Fail
+                                        <option value="all" <%=resultStatus==="all" ? "selected" : "" %>>All</option>
+                                        <option value="true" <%=resultStatus==="true" ? "selected" : "" %>>Pass</option>
+                                        <option value="false" <%=resultStatus==="false" ? "selected" : "" %>>Fail
                                         </option>
                                     </select>
                                 </div>
@@ -46,35 +46,35 @@
                             <!-- Candidate List -->
                             <% if (candidates.length> 0) { %>
                                 <ul class="list-group">
-                                    <% candidates.forEach(candidate=> { %>
+                                    <% candidates.forEach(candidate=> {
+                                        const filteredTests = resultStatus === "all" ? candidate.tests :
+                                        candidate.tests.filter(test => test.testResult.toString() === resultStatus);
 
-                                        <li class="list-group-item">
+                                        filteredTests.forEach(test => { %>
+                                        <li class="list-group-item m-1">
                                             <strong>Name:</strong>
                                             <%= candidate.firstName %>
                                                 <%= candidate.lastName %><br>
                                                     <strong>License Number:</strong>
                                                     <%= candidate.licenseNumber %><br>
                                                         <strong>Test Type:</strong>
-                                                        <%= candidate.testType %><br>
+                                                        <%= test.testType || "Unknown" %><br>
                                                             <strong>Appointment Date:</strong>
                                                             <%= candidate.appointment.date %><br>
                                                                 <strong>Appointment Time:</strong>
                                                                 <%= candidate.appointment.time %><br>
-                                                                    <strong>Test Result:</strong>
-                                                                    <b>
-                                                                        <%= candidate.passFail===true ? "Pass" : "Fail"
-                                                                            %>
+                                                                    <strong>Test Result:</strong> <b>
+                                                                        <%= test.testResult ? "Pass" : "Fail" %>
                                                                     </b><br>
                                                                     <strong>Test Comments:</strong>
-                                                                    <%= candidate.comment %>
+                                                                    <%= test.comment || "No comments provided" %>
                                         </li>
                                         <% }); %>
+                                            <% }); %>
                                 </ul>
                                 <% } else { %>
                                     <p>No candidates found.</p>
                                     <% } %>
-
-
                         </div>
                     </div>
                 </div>
@@ -82,6 +82,7 @@
 
             <!-- Footer-->
             <%- include('layouts/footer'); -%>
+
                 <!-- Script -->
                 <%- include('layouts/scripts'); -%>
     </body>
