@@ -90,9 +90,4 @@ const g2 = async (req, res) => {
   }
 };
 
-const examinerDashboard = async (req, res) => {
-  const user = await User.findById(req.session.userId);
-  res.render("examiner", { user });
-};
-
-module.exports = { dashboard, g, g2, appointment, examinerDashboard, drivers };
+module.exports = { dashboard, g, g2, appointment, drivers };

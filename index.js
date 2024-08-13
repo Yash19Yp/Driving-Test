@@ -35,7 +35,6 @@ app.use(
 app.get("/", pageRouteController.dashboard);
 app.get("/g", isDriver, pageRouteController.g);
 app.get("/g2", isDriver, pageRouteController.g2);
-// app.get("/examiner", isExaminer, pageRouteController.examinerDashboard);
 
 app.get("/examiner", isExaminer, examinerController.getUsersForExaminer);
 app.post("/updateTestResult", isExaminer, examinerController.updateTestResult);
