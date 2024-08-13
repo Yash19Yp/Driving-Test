@@ -62,7 +62,6 @@ app.get("/appointment", isAdmin, pageRouteController.appointment);
 
 app.post("/appointments", isAdmin, appointmentController.createAppointment);
 app.get("/appointments", appointmentController.getAppointmentsForDate);
-app.post("/book-appointment", isDriver, appointmentController.bookAppointment);
 
 // Creating connection with the database
 mongoose
