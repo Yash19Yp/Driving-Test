@@ -74,8 +74,8 @@ const bookAppointment = async (req, res) => {
     user.appointment = appointment._id;
     user.tests.push({
       testType: testType,
-      testResult: null, // This will be updated by the examiner
-      comment: "", // This will be updated by the examiner
+      testResult: null,
+      comment: "",
     });
     await user.save();
 
