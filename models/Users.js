@@ -14,8 +14,8 @@ const UserSchema = new Schema({
   lastName: { type: String, default: "default" },
   licenseNumber: { type: String, default: "default" },
   age: { type: Number, default: 0 },
-  username: { type: String, unique: true },
-  password: { type: String },
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
   userType: { type: String, default: "Driver" },
   car_details: {
     make: { type: String, default: "default" },

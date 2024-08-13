@@ -12,7 +12,6 @@ const drivers = async (req, res) => {
     const user = (await User.findById(req.session.userId)) ?? null;
 
     const resultStatus = req.query.testResult || "all";
-    console.log("resultStatus", req.query);
     let filter = {};
 
     if (resultStatus !== "all") {
